@@ -3,22 +3,20 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios'); // eslint-disable-line import/no-extraneous-dependencies
+const { categoriesPath, itemsDir, writeCategories } = require('./constants');
 require('dotenv').config(); // eslint-disable-line import/no-extraneous-dependencies
 
-const categoriesPath = path.join(__dirname, '..', 'data', 'categories.json');
-
-const CreateCategories = `
-  mutation CreateCategories($objects: [categories_insert_input!]!) {
-    insert_categories(objects: $objects) {
-      returning {
-        id
-        name
-      }
-    }
+const GetCategories = `
+query GetCategories {
+  categories {
+    id
+    name
   }
+}
+
 `;
 
-const createCategories = (objects) => {
+const updateCategories = (objects) => {
   axios({
     url: process.env.REACT_APP_API,
     method: 'post',
@@ -27,10 +25,13 @@ const createCategories = (objects) => {
       variables: { objects },
     },
   }).then((result) => {
-    console.log(result.data);
+    fs.writeFileSync(
+      path.join(itemsDir, '..', 'categories.json'),
+      JSON.stringify(createCategories(result)),
+    );
   });
 };
 
 const categories = JSON.parse(fs.readFileSync(categoriesPath));
 
-createCategories(categories);
+updateCategories(categories);
