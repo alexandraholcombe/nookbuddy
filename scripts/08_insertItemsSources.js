@@ -1,41 +1,43 @@
 #!/usr/bin/env node
 
 const axios = require('axios'); // eslint-disable-line import/no-extraneous-dependencies
-const { sourcesPath } = require('./constants');
+const { itemsSourcesPath, sourcesPath } = require('./constants');
 const { parseFile, writeFile } = require('./utils');
 require('dotenv').config(); // eslint-disable-line import/no-extraneous-dependencies
 
-const CreateSources = `
-  mutation CreateSources($objects: [sources_insert_input!]!) {
-    insert_sources(objects: $objects) {
+const CreateItemsSources = `
+  mutation CreateItemsSources($objects: [items_sources_insert_input!]!) {
+    insert_items_sources(objects: $objects) {
       returning {
         id
-        name
+        itemId
+        sourceId
       }
     }
   }
 `;
 
-const GetSources = `
+const GetItemsSources = `
 query GetSources {
   sources {
     id
-    name
+    itemId
+    sourceId
   }
 }
 `;
 
-const updateLocalSources = () => {
+const updateLocalItemsSources = () => {
   axios({
     url: process.env.REACT_APP_API,
     method: 'post',
     data: {
-      query: GetSources,
+      query: GetItemsSources,
     },
   })
     .then((res) => {
-      const result = res.data.data.sources;
-      writeFile(sourcesPath, result);
+      const result = res.data.data.items_sources;
+      writeFile(itemsSourcesPath, result);
     })
     .catch((err) => {
       console.log('Failed to get sources');
@@ -48,12 +50,12 @@ const createSources = (objects) => {
     url: process.env.REACT_APP_API,
     method: 'post',
     data: {
-      query: CreateSources,
+      query: CreateItemsSources,
       variables: { objects },
     },
   })
     .then(() => {
-      updateLocalSources();
+      updateLocalItemsSources();
     })
     .catch((err) => {
       console.log('Failed to insert sources');
@@ -62,8 +64,8 @@ const createSources = (objects) => {
 };
 
 try {
-  const sources = parseFile(sourcesPath);
-  createSources(sources);
+  const itemsSources = parseFile(sourcesPath);
+  createSources(itemsSources);
 } catch (error) {
   console.log('Failed to insert sources');
   console.log(error);

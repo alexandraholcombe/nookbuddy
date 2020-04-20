@@ -30,9 +30,26 @@ const writeFile = (path, data) => {
 
 const parseFile = (path) => JSON.parse(fs.readFileSync(path));
 
+const removeKeys = (obj, keys) => {
+  const keysSet = new Set(keys);
+
+  return {
+    ...Object.keys(obj)
+      .filter((item) => !keysSet.has(item))
+      .reduce(
+        (newObj, item) => ({
+          ...newObj,
+          [item]: obj[item],
+        }),
+        {},
+      ),
+  };
+};
+
 module.exports = {
+  parseFile,
+  removeKeys,
   transformCategories,
   transformSources,
-  parseFile,
   writeFile,
 };

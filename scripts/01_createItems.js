@@ -15,7 +15,7 @@ const transformItems = (data) => {
     return {
       id,
       name,
-      category,
+      categoryId: category,
       ...nh,
     };
   } catch (err) {

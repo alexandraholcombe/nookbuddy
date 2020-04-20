@@ -14,10 +14,12 @@ const arrangeCategories = (data) => {
 const applyCategories = (items, categories) => {
   const categoryIds = arrangeCategories(categories);
 
-  return items.map((item) => ({
-    ...item,
-    category: categoryIds[item.category],
-  }));
+  return items.map((item) => {
+    return {
+      ...item,
+      categoryId: categoryIds[item.categoryId],
+    };
+  });
 };
 
 try {

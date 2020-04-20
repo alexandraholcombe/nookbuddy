@@ -1,17 +1,15 @@
-const { parseFile, writeFile } = require('./utils');
+const { parseFile, removeKeys, writeFile } = require('./utils');
 const { itemsPath } = require('./constants');
 
 const allItems = parseFile(itemsPath);
 
 const arrangePrices = (items) => {
   return items.map((item) => {
-    const { id, name, category, sources, buyPrices, sellPrice } = item;
+    const { buyPrices, sellPrice } = item;
     const prices = JSON.stringify({ buyPrices, sellPrice });
+    const updatedItem = removeKeys(item, ['buyPrices', 'sellPrice']);
     return {
-      id,
-      name,
-      category,
-      sources,
+      ...updatedItem,
       prices,
     };
   });
