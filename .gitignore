@@ -24,3 +24,6 @@ yarn-error.log*
 
 /data/items
 /data/villagers
+
+/.env
+/.env.*
