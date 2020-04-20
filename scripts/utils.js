@@ -28,4 +28,11 @@ const writeFile = (path, data) => {
   fs.writeFileSync(path, JSON.stringify(data));
 };
 
-module.exports = { transformCategories, transformSources, writeFile };
+const parseFile = (path) => JSON.parse(fs.readFileSync(path));
+
+module.exports = {
+  transformCategories,
+  transformSources,
+  parseFile,
+  writeFile,
+};

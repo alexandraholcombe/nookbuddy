@@ -2,13 +2,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const {
-  categoriesPath,
-  itemsPath,
-  itemsDir,
-  sourcesPath,
-} = require('./constants');
-const { transformCategories, transformSources, writeFile } = require('./utils');
+const { itemsPath, itemsDir } = require('./constants');
+const { writeFile } = require('./utils');
 
 // Take JSON, output New Horizons item object
 const transformItems = (data) => {
@@ -50,12 +45,7 @@ const items = readFiles(itemsDir);
 try {
   // write items to file
   writeFile(itemsPath, items);
-
-  // write categories to file
-  writeFile(categoriesPath, transformCategories(items));
-
-  // write sources to file
-  writeFile(sourcesPath, transformSources(items));
 } catch (error) {
+  console.log('Failed to Create Items');
   console.log(error);
 }
