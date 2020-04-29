@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
 const axios = require('axios'); // eslint-disable-line import/no-extraneous-dependencies
 const { categoriesPath } = require('./constants');
 const { parseFile, writeFile } = require('./utils');
@@ -26,6 +25,24 @@ query GetCategories {
 }
 `;
 
+const updateLocalCategories = () => {
+  axios({
+    url: process.env.REACT_APP_API,
+    method: 'post',
+    data: {
+      query: GetCategories,
+    },
+  })
+    .then((res) => {
+      const result = res.data.data.sources;
+      writeFile(categoriesPath, result);
+    })
+    .catch((err) => {
+      console.log('Failed to get categories');
+      console.log(err);
+    });
+};
+
 // Oof
 const createCategories = (objects) => {
   axios({
@@ -37,21 +54,7 @@ const createCategories = (objects) => {
     },
   })
     .then(() => {
-      axios({
-        url: process.env.REACT_APP_API,
-        method: 'post',
-        data: {
-          query: GetCategories,
-        },
-      })
-        .then((res) => {
-          const result = res.data.data.categories;
-          writeFile(categoriesPath, result);
-        })
-        .catch((err) => {
-          console.log('Failed to get categories');
-          console.log(err);
-        });
+      updateLocalCategories();
     })
     .catch((err) => {
       console.log('Failed to insert categories');
@@ -61,7 +64,8 @@ const createCategories = (objects) => {
 
 try {
   const categories = parseFile(categoriesPath);
-  createCategories(categories);
+  updateLocalCategories(categories);
+  // createCategories(categories);
 } catch (error) {
   console.log('Failed to insert categories');
   console.log(error);

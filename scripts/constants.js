@@ -3,6 +3,12 @@ const path = require('path');
 const categoriesPath = path.join(__dirname, '..', 'data', 'categories.json');
 const itemsPath = path.join(__dirname, '..', 'data', 'items.json');
 const sourcesPath = path.join(__dirname, '..', 'data', 'sources.json');
+const variationsPath = path.join(
+  __dirname,
+  '..',
+  'data',
+  'items_variations.json',
+);
 const itemsSourcesPath = path.join(
   __dirname,
   '..',
@@ -17,4 +23,5 @@ module.exports = {
   itemsSourcesPath,
   sourcesPath,
   itemsDir,
+  variationsPath,
 };
